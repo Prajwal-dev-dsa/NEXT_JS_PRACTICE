@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ClientProvider from "@/ClientProvider";
 
 export const metadata: Metadata = {
   title: "NextJS Practice Project",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <ClientProvider>{children}</ClientProvider>
+      </body>
     </html>
   );
 }

@@ -1,22 +1,28 @@
 "use client";
 
 import axios from 'axios';
+import { signIn, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
+import { useRouter } from 'next/navigation';
 
 export default function Register() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { data: session } = useSession();
+  console.log(session?.user);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/auth/register", { name, email, password });
+      const res = await axios.post("/api/auth/register", { name, email, password, redirect: false });
       console.log(res.data);
       setName("");
       setEmail("");
       setPassword("");
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
@@ -108,6 +114,11 @@ export default function Register() {
         {/* Google Sign-in Button */}
         <div>
           <button
+            onClick={async () => {
+              await signIn("google", {
+                callbackUrl: "/"
+              })
+            }}
             type="button"
             className="w-full flex items-center justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-white bg-slate-700 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >

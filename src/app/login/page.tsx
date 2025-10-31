@@ -5,7 +5,10 @@ import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+
 export default function SignIn() {
+  const router = useRouter();
   const { data: session } = useSession();
   console.log(session?.user);
   const [email, setEmail] = useState('');
@@ -13,10 +16,11 @@ export default function SignIn() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await signIn("credentials", { email, password });
+      const res = await signIn("credentials", { email, password, redirect: false });
       console.log(res);
       setEmail("");
       setPassword("");
+      router.push("/");
     } catch (error) {
       console.log(error);
     }
@@ -89,6 +93,11 @@ export default function SignIn() {
         {/* Google Sign-in Button */}
         <div>
           <button
+            onClick={async () => {
+              await signIn("google", {
+                callbackUrl: "/"
+              })
+            }}
             type="button"
             className="w-full flex items-center justify-center py-2 px-4 border border-gray-600 rounded-md shadow-sm text-sm font-medium text-white bg-slate-700 hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >

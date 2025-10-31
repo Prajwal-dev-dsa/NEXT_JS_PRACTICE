@@ -4,7 +4,7 @@ interface IUser {
   _id?: mongoose.Schema.Types.ObjectId;
   name: string;
   email: string;
-  password: string;
+  password?: string;
   image: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     password: {
       type: String,
-      required: true,
     },
     image: {
       type: String,

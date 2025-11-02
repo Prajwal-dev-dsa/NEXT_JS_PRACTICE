@@ -52,7 +52,7 @@ const authOptions: NextAuthOptions = {
             email: user?.email,
           });
           user.id = newUser._id.toString();
-        }
+        } else user.id = existUser._id.toString();
       }
       return true;
     },

@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
 import Image from 'next/image';
+import axios from 'axios';
 
 export default function EditProfile() {
     const imageRef = useRef<HTMLInputElement>(null)
@@ -26,6 +27,19 @@ export default function EditProfile() {
         if (!e.target.files || e.target.files.length === 0) return
         setBackendImage(e.target.files[0])
         setFrontendImage(URL.createObjectURL(e.target.files[0]))
+    }
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        try {
+            const formData = new FormData()
+            formData.append('name', name)
+            if (backendImage) formData.append('file', backendImage)
+            const res = await axios.post(`/api/user/edit`, formData)
+            console.log(res.data)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -87,6 +101,7 @@ export default function EditProfile() {
 
                     <div>
                         <button
+                            onClick={handleSubmit}
                             type="submit"
                             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                         >

@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import authOptions from "@/lib/authOptions";
 import User from "@/models/user.model";
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
     await connectToDB();
     const session = await getServerSession(authOptions);

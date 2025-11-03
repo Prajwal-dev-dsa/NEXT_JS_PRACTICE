@@ -6,7 +6,7 @@ import validator from "validator";
 
 export async function POST(req: NextRequest) {
   try {
-    const { name, email, password } = await req.json();
+    const { name, email, password, image } = await req.json();
     if (!name || !email || !password) {
       return NextResponse.json(
         { error: "All fields are required" },
@@ -33,7 +33,12 @@ export async function POST(req: NextRequest) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await User.create({ name, email, password: hashedPassword });
+    const user = await User.create({
+      name,
+      email,
+      image: image ?? "",
+      password: hashedPassword,
+    });
     return NextResponse.json(
       { message: "User registered successfully", user },
       { status: 201 }

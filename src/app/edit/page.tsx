@@ -2,26 +2,27 @@
 
 import Link from 'next/link';
 import { IoArrowBack } from 'react-icons/io5';
-import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
 import Image from 'next/image';
 import axios from 'axios';
+import { useContext } from 'react';
+import { userDataContext } from '@/context/UserContext';
 
 export default function EditProfile() {
+    const data = useContext(userDataContext)
     const imageRef = useRef<HTMLInputElement>(null)
     const [name, setName] = useState('')
     const [frontendImage, setFrontendImage] = useState('')
     const [backendImage, setBackendImage] = useState<File>()
 
-    const { data: session } = useSession()
-
     useEffect(() => {
-        if (session) {
-            setName(session.user.name as string)
-            setFrontendImage(session.user.image as string)
+        if (data) {
+            setName(data.user?.user?.name as string)
+            setFrontendImage(data.user?.user?.image as string)
+            console.log(data.user?.user?.image)
         }
-    }, [session])
+    }, [data])
 
     const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files || e.target.files.length === 0) return
@@ -36,6 +37,7 @@ export default function EditProfile() {
             formData.append('name', name)
             if (backendImage) formData.append('file', backendImage)
             const res = await axios.post(`/api/user/edit`, formData)
+            data?.setUser(res.data)
             console.log(res.data)
         } catch (error) {
             console.log(error)

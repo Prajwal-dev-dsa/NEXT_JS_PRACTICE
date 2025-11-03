@@ -4,14 +4,16 @@ import { FiLogOut } from 'react-icons/fi';
 import { useSession, signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useContext, useEffect } from 'react';
+import { userDataContext } from '@/context/UserContext';
 
 export default function Home() {
   const router = useRouter()
-  const { data: session } = useSession()
-  console.log(session)
-  const user = {
-    name: session?.user?.name,
-    image: session?.user?.image
+  const data = useContext(userDataContext)
+  console.log(data)
+  let user = {
+    name: data?.user?.user?.name,
+    image: data?.user?.user?.image
   };
   const handleSignOut = async () => {
     try {
@@ -20,6 +22,15 @@ export default function Home() {
       console.log(error)
     }
   }
+
+  useEffect(() => {
+    if (data) {
+      user = {
+        name: data?.user?.user?.name,
+        image: data?.user?.user?.image
+      };
+    }
+  }, [data])
 
   return (
     <div className="relative min-h-screen bg-slate-900 text-white p-4">

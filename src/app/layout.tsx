@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ClientProvider from "@/ClientProvider";
+import UserContext from "@/context/UserContext";
 
 export const metadata: Metadata = {
   title: "NextJS Practice Project",
@@ -15,7 +16,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <ClientProvider>{children}</ClientProvider>
+        <ClientProvider>
+          <UserContext>
+            {children}
+          </UserContext>
+        </ClientProvider>
       </body>
     </html>
   );
